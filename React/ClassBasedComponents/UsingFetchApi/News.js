@@ -46,33 +46,71 @@ export class News extends Component {
   constructor(){
    super();
    this.state={
-    articles:this.articles
+    articles:[],
+    loading:false,
+    page:1
    }
   }
   async componentDidMount()
   {
     console.log("cdm");
-    let url="https://newsapi.org/v2/everything?domains=wsj.com&apiKey=f485c2d044094164a99f51ff359a6bbc";
+    let url="https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=f485c2d044094164a99f51ff359a6bbc";
     let data=await fetch(url);
     let parsedData=await data.json();
     this.setState({articles:parsedData.articles})
+  }
+   HandlePrevClick=async()=>
+  {
+    let url=`https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=f485c2d044094164a99f51ff359a6bbc&page=${this.state.page-1}&pageSize=23`;
+    let data=await fetch(url);
+    let parsedData=await data.json();
+   
+    this.setState
+    ({
+      page:this.state.page-1,
+      articles:parsedData.articles
+    })
+    
+  }
+  HandleNextClick=async()=>
+  {
+    if(this.state.page+1>Math.ceil(this.state.totalResults/23))
+    {
+
+    }
+    else
+    {
+      let url=`https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=f485c2d044094164a99f51ff359a6bbc&page=${this.state.page+1}&pageSize=23`;
+      let data=await fetch(url);
+      let parsedData=await data.json();
+     
+      this.setState
+      ({
+        page:this.state.page+1,
+        articles:parsedData.articles
+      })
+    }
+    
+    
   }
   render() {
    
     return (
       <div className='container my-3'>
        <h5>TheCurrent : Top Headlines</h5>
-      
        <div className="row">
        { this.state.articles.map((element)=>{
           return <div className="col md 3"key={element.url}>
            <NewsItem title={element.title?element.title:""} newsUrl={element.url} description={element.description?element.description:""} imageUrl={element.urlToImage}/>
            </div>
        })}
-       
-
        </div>
+       <div className="container  my-5 d-flex justify-content-between">
+        <button disabled={this.state.page<=1} type="button" class="btn btn-dark"onClick={this.HandlePrevClick}>&larr;Previous</button>
+      <button type="button" class="btn btn-dark"onClick={this.HandleNextClick}>Next	&rarr;</button>
       </div>
+      </div>
+     
     )
   }
 }
