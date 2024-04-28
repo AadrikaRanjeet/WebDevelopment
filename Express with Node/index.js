@@ -1,7 +1,18 @@
 import express from "express";
 const app=express();
 
-app.listen(3000,()=> {
-    console.log("Server running on port 3000");
-
+app.get("/",(req,res)=>{
+    res.send("Hello World");
+})
+app.post("/register",(req,res)=>{
+    res.sendStatus(201);
+});
+app.put("/user/angela",(req,res)=>{
+    res.sendStatus(200);
+});
+app.patch("/user/angela",(req,res)=>{
+    res.sendStatus(200);
+});
+app.delete("/user/angela",(req,res)=>{
+    res.sendStatus(200);
 });
